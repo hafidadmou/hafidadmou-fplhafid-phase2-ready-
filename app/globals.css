@@ -2,29 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-/* خطوط وتنسيق RTL */
-:root {
-  --main-bg: #0f172a; /* dark navy */
-  --card-bg: #0b1220;
+/* Design tokens */
+:root{
+  --primary: #3b82f6; /* blue */
+  --accent: #7c3aed; /* purple */
   --muted: #94a3b8;
+  --card: 255 255 255;
+  --glass: rgba(255,255,255,0.06);
 }
 
-html, body, #__next {
-  height: 100%;
-}
+html,body,#__next{height:100%}
 
-body {
-  @apply bg-slate-50 text-slate-900;
-  font-family: "Tajawal", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+body{
+  font-family: 'Tajawal', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(180deg,#0f172a 0%, #071024 40%), radial-gradient(800px 400px at 10% 10%, rgba(124,58,237,0.12), transparent 20%);
+  color: #0f172a;
   direction: rtl;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* تطبيق نمط بصري للبطاقات */
-.card {
-  @apply bg-white shadow-md rounded-lg p-4;
+/* Hero background helper (can be used by layout or page) */
+.bg-hero-pattern{
+  background-image: linear-gradient(180deg, rgba(15,23,42,0.55), rgba(7,16,36,0.65)), url('/hero-abstract.svg');
+  background-size: cover;
+  background-position: center right;
 }
 
-/* شريط تنقّل */
-.header {
-  @apply bg-white shadow-sm;
+/* Logo */
+.logo{
+  box-shadow: 0 8px 28px rgba(15,23,42,0.25);
+}
+
+/* Primary button */
+.btn-primary{
+  @apply px-4 py-2 rounded-md bg-gradient-to-br from-primary to-accent text-white font-semibold shadow-md hover:from-indigo-500 hover:to-purple-600;
+}
+
+/* Card */
+.card{
+  background-color: rgba(var(--card),1);
+  @apply rounded-2xl shadow-lg;
+  padding: 1rem;
+}
+
+/* Player card visuals */
+.player-card{
+  @apply flex items-center justify-between gap-4 p-3 rounded-lg bg-white/90 shadow-md;
+}
+
+.rating-badge{
+  @apply inline-flex items-center justify-center rounded-full text-white font-bold;
+  width: 54px;
+  height: 54px;
+  box-shadow: 0 6px 16px rgba(124,58,237,0.18);
+}
+
+/* subtle animations */
+@keyframes floaty { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
+.floaty{ animation: floaty 6s ease-in-out infinite }
+
+/* Hover effects */
+.player-card:hover{ transform: translateY(-6px); transition: transform 160ms ease; }
+
+/* responsive adjustments */
+@media (max-width: 768px){
+  .player-card{ padding: 0.75rem }
+}
+
+/* Utility to show muted text */
+.muted{ color: var(--muted) }
+
+/* Make inputs look premium */
+.input-premium{
+  @apply border border-slate-200 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400;
 }

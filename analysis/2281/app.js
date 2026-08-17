@@ -1,23 +1,40 @@
 (async function(){
   const ENTRY_ID = 2281;
   const BASE = 'https://fantasy.premierleague.com/api';
+  const PROXY_PREFIX = 'https://api.allorigins.win/raw?url='; // CORS proxy to avoid FPL CORS restrictions on static hosting
   const elMeta = document.getElementById('meta');
   const elPlayers = document.getElementById('players');
 
   function showError(msg){ elMeta.textContent = 'خطأ: '+msg }
 
+  async function fetchJson(url){
+    // Try via CORS proxy first (reliable for static GitHub Pages). If that fails, try direct fetch as fallback.
+    try{
+      const proxyUrl = PROXY_PREFIX + encodeURIComponent(url);
+      const res = await fetch(proxyUrl);
+      if(!res.ok) throw new Error('Proxy fetch failed: '+res.status);
+      return await res.json();
+    }catch(proxyErr){
+      try{
+        const res = await fetch(url);
+        if(!res.ok) throw new Error('Direct fetch failed: '+res.status);
+        return await res.json();
+      }catch(directErr){
+        // Prefer the proxy error message if available
+        throw new Error(proxyErr.message || directErr.message || 'Failed to fetch '+url);
+      }
+    }
+  }
+
   try{
     elMeta.textContent = 'جاري جلب البيانات...';
-    const bsRes = await fetch(BASE+'/bootstrap-static/');
-    const bs = await bsRes.json();
+
+    const bs = await fetchJson(BASE + '/bootstrap-static/');
     const events = bs.events || [];
     let currentEvent = events.find(e=>e.is_current)?.id || events.find(e=>e.is_next)?.id || (events.length? events[events.length-1].id : 1);
 
-    const entryRes = await fetch(BASE+`/entry/${ENTRY_ID}/`);
-    const entry = await entryRes.json();
-
-    const picksRes = await fetch(BASE+`/entry/${ENTRY_ID}/event/${currentEvent}/picks/`);
-    const picksObj = await picksRes.json();
+    const entry = await fetchJson(BASE + `/entry/${ENTRY_ID}/`);
+    const picksObj = await fetchJson(BASE + `/entry/${ENTRY_ID}/event/${currentEvent}/picks/`);
 
     const elements = bs.elements || [];
     const teams = bs.teams || [];

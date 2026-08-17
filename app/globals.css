@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* خطوط وتنسيق RTL */
+:root {
+  --main-bg: #0f172a; /* dark navy */
+  --card-bg: #0b1220;
+  --muted: #94a3b8;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900;
+  font-family: "Tajawal", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  direction: rtl;
+}
+
+/* تطبيق نمط بصري للبطاقات */
+.card {
+  @apply bg-white shadow-md rounded-lg p-4;
+}
+
+/* شريط تنقّل */
+.header {
+  @apply bg-white shadow-sm;
+}
